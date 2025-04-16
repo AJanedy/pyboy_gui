@@ -6,7 +6,7 @@ KEYBINDS = {
     "PRESS_BUTTON_a": "a",
     "PRESS_BUTTON_b": "s",
     "PRESS_BUTTON_START": "Return",
-    "PRESS_BUTTON_SELECT": "Backspace",
+    "PRESS_BUTTON_SELECT": "BackSpace",
 }
 
 TKINTER_TO_SDL2 = {

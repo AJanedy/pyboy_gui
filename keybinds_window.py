@@ -1,5 +1,7 @@
 import tkinter as tk
 from functools import partial
+
+import config
 from config import KEYBINDS, TKINTER_TO_SDL2
 
 
@@ -82,7 +84,9 @@ class KeybindsConfig:
             return  # Prevent saving if any are unbound
 
         if self.keybinds != KEYBINDS:
+            self.convert_keybinds()
             self.parent.remapped_keys = self.keybinds.copy()
+            print(self.parent.remapped_keys)
         self.top.destroy()
 
     def flash_button(self, btn, count=6):
@@ -140,3 +144,9 @@ class KeybindsConfig:
         btn.config(bg="grey", state="normal")  # Reset color and re-enable the button
         self.top.unbind("<KeyPress>")
         self.top.unbind("<Button>")
+
+    def convert_keybinds(self):
+        self.keybinds = {
+            action: TKINTER_TO_SDL2.get(key, f"UNKNOWN_{key}")
+            for action, key, in self.keybinds.items()
+        }
