@@ -258,7 +258,7 @@ class GameBoyLauncher:
         # Create a new top-level window for the README
         readme_window = tk.Toplevel(self.root)
         readme_window.title("README")
-        readme_window.geometry("1300x900")
+        readme_window.geometry("1350x900")
 
         # Create a frame for holding the HTMLLabel
         frame = ttk.Frame(readme_window)

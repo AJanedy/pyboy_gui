@@ -32,16 +32,6 @@ Before running the PyBoy_GUI program, ensure you have the following:
 4. Install the necessary dependencies using pip by running the following command in your terminal/command prompt: pip install -r requirements.txt
 5. After installing the dependencies, you can launch the PyBoy_GUI program by running: python pyboy_gui.py
 
-## Features:
-- User-friendly interface to load Game Boy ROMs.
-- Configurable game controls.
-- Integration with the PyBoy emulator for Game Boy gameplay.
-- Real-time feedback and game interaction.
-
-## Contributing:
-If you'd like to contribute to the development of this project, feel free to fork the repository, make improvements, 
-and submit a pull request. We welcome contributions and feedback!
-
 ## License:
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
