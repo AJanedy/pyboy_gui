@@ -1,12 +1,11 @@
 # PyBoy_GUI
+April 2025
 
 ## Authors:
 - Andrew Janedy
 - Isabella Russell
 - Jordan DeAndrade
 - Justice Russell
-
-- April 2025
 
 ## Overview:
 PyBoy_GUI is a graphical user interface (GUI) for the [PyBoy emulator](https://github.com/Baekalfen/PyBoy), designed to provide an easy and seamless way 
