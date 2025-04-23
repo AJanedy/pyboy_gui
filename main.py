@@ -10,6 +10,7 @@ import os
 from config import KEYBINDS, COLORS
 import markdown
 from tkhtmlview import HTMLLabel
+import platform
 
 
 class GameBoyLauncher:
@@ -228,6 +229,20 @@ class GameBoyLauncher:
         self.update_stats()
 
     def launch_game(self):
+
+        def get_os():
+            os_name = platform.system().lower()
+
+            if os_name == 'windows':
+                return "Windows"
+            elif os_name == 'darwin':
+                return "macOS"
+            elif os_name == 'linux':
+                return "Linux"
+            else:
+                return "Unknown OS"
+
+        op_sys = get_os()
         """Launch the selected game with PyBoy"""
         selection = self.listbox.curselection()
         if selection:
@@ -247,9 +262,13 @@ class GameBoyLauncher:
             self.root.update()
             keybinds = json.dumps(self.keybinds)
             try:
-                subprocess.Popen(["python", "-m", "pyboy", rom_path])
-                # subprocess.Popen(["python", "-m", "pyboy", f"roms/{game}.gb", "-k", keybinds])
-                self.status_var.set("SYSTEM READY")
+                if op_sys == "Windows":
+                    subprocess.Popen(["python", "-m", "pyboy", rom_path])
+                    # subprocess.Popen(["python", "-m", "pyboy", f"roms/{game}.gb", "-k", keybinds])
+                    self.status_var.set("SYSTEM READY")
+                elif op_sys == "macOS" or op_sys == "Linux":
+                    subprocess.Popen(["python3", "-m", "pyboy", rom_path])
+                    self.status_var.set("SYSTEM READY")
             except Exception as e:
                 print(f"Error launching game: {e}")
                 self.status_var.set("LAUNCH FAILED")
@@ -281,12 +300,12 @@ class GameBoyLauncher:
             error_label.pack(expand=True)
 
 
-if __name__ == "__main__":
 
+
+if __name__ == "__main__":
     install_or_update_pyboy()
     root = tk.Tk()
     app = GameBoyLauncher(root)
     root.mainloop()
-
 
 # some code snippets added by ai
