@@ -2,13 +2,14 @@ from get_dependencies import install_or_update_pyboy
 from settings_ui import SettingsWindow
 import tkinter as tk
 from tkinter import ttk
-from tkinter import filedialog
 from tkinter import font
 import subprocess
 from pathlib import Path
 import json
 import os
-from config import KEYBINDS
+from config import KEYBINDS, COLORS
+import markdown
+from tkhtmlview import HTMLLabel
 
 
 class GameBoyLauncher:
@@ -16,22 +17,22 @@ class GameBoyLauncher:
         self.root = root
         self.root.title("Game Boy ROM Launcher")
         self.root.geometry("1000x700")
-        self.root.configure(bg='#C5C1C2')
+        self.root.configure(bg=COLORS["gameboy_grey"])
         self.rom_directory = Path("roms")
         self.keybinds = KEYBINDS.copy()
         self.remapped_keys = {}
         self.open_windows = {}
 
         self.style = ttk.Style()
-        self.style.configure('Hacker.TFrame', background='#C5C1C2')
+        self.style.configure('Hacker.TFrame', background=COLORS["gameboy_grey"])
         self.style.configure('Hacker.TButton',
-                             background='#00FF00',
-                             foreground='#C5C1C2',
+                             background=COLORS["button_grey"],
+                             foreground=COLORS["gameboy_grey"],
                              font=('Courier', 12, 'bold'),
                              padding=10)
         self.style.configure('Hacker.TLabel',
-                             background='#C5C1C2',
-                             foreground='#21298C',
+                             background=COLORS["gameboy_grey"],
+                             foreground=COLORS["text_blue"],
                              font=('Courier', 12))
 
         main_frame = ttk.Frame(root, padding="20", style='Hacker.TFrame')
@@ -41,8 +42,8 @@ class GameBoyLauncher:
         title = tk.Label(main_frame,
                          text="GAME BOY LAUNCHER v1.0",
                          font=title_font,
-                         fg='#21298C',
-                         bg='#C5C1C2')
+                         fg=COLORS["text_blue"],
+                         bg=COLORS["gameboy_grey"])
         title.grid(row=0, column=0, columnspan=2, pady=(0, 20))
 
         search_frame = ttk.Frame(main_frame, style='Hacker.TFrame')
@@ -56,9 +57,9 @@ class GameBoyLauncher:
         search_entry = tk.Entry(search_frame,
                                 textvariable=self.search_var,
                                 font=('Courier', 12),
-                                bg='#5D5A61',
-                                fg='#C5C1C2',
-                                insertbackground='#21298C',
+                                bg=COLORS["button_grey"],
+                                fg=COLORS["gameboy_grey"],
+                                insertbackground=COLORS["text_blue"],
                                 relief=tk.FLAT,
                                 width=50)
         search_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
@@ -74,11 +75,11 @@ class GameBoyLauncher:
                                   width=70,
                                   height=20,
                                   font=('Courier', 14, 'bold'),
-                                  bg='#596708',
-                                  fg='#21298C',
+                                  bg=COLORS["screen_green"],
+                                  fg=COLORS["text_blue"],
                                   selectmode=tk.SINGLE,
-                                  selectbackground='#005500',
-                                  selectforeground='#596708',
+                                  selectbackground=COLORS["highlight_green"],
+                                  selectforeground=COLORS["screen_green"],
                                   relief=tk.FLAT)
 
         self.listbox.grid(row=3, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), padx=(0, 10))
@@ -90,10 +91,10 @@ class GameBoyLauncher:
                                   text=f"LAUNCH\nGAME",
                                   command=self.launch_game,
                                   font=('Courier', 14, 'bold'),
-                                  bg='#a61257',
-                                  fg='#000000',
-                                  activebackground='#008800',
-                                  activeforeground='#FFFFFF',
+                                  bg=COLORS["button_magenta"],
+                                  fg=COLORS["black"],
+                                  activebackground=COLORS["green"],
+                                  activeforeground=COLORS["white"],
                                   relief=tk.RAISED,
                                   width=6,
                                   height=3,
@@ -101,13 +102,30 @@ class GameBoyLauncher:
                                   highlightthickness=0)
         launch_button.pack(side=tk.RIGHT, padx=10)
 
-        center_buttons_frame = tk.Frame(control_frame, bg='#C5C1C2')
+        # Add this just before the 'Launch Game' button in the control_frame
+
+        readme_button = tk.Button(control_frame,
+                                  text=f"README",
+                                  command=self.open_readme,  # Command for the button
+                                  font=('Courier', 14, 'bold'),
+                                  bg=COLORS["button_magenta"],
+                                  fg=COLORS["black"],
+                                  activebackground=COLORS["green"],
+                                  activeforeground=COLORS["white"],
+                                  relief=tk.RAISED,
+                                  width=6,
+                                  height=3,
+                                  bd=5,
+                                  highlightthickness=0)
+        readme_button.pack(side=tk.RIGHT, padx=10)  # Place the button to the left of the 'Launch Game' button
+
+        center_buttons_frame = tk.Frame(control_frame, bg=COLORS["gameboy_grey"])
         center_buttons_frame.pack(expand=True, padx=(80, 0))
 
-        settings_frame = tk.Frame(center_buttons_frame, bg='#C5C1C2')
+        settings_frame = tk.Frame(center_buttons_frame, bg=COLORS["gameboy_grey"])
         settings_frame.pack(side=tk.LEFT, padx=10)
 
-        power_button_frame = tk.Frame(center_buttons_frame, bg='#C5C1C2')
+        power_button_frame = tk.Frame(center_buttons_frame, bg=COLORS["gameboy_grey"])
         power_button_frame.pack(side=tk.LEFT, padx=10)
 
         settings_button = tk.Button(settings_frame,
@@ -115,16 +133,16 @@ class GameBoyLauncher:
                                     height=1,
                                     font=('Courier', 8, 'bold'),
                                     relief=tk.RAISED,
-                                    bg="grey",
-                                    fg="#21298C",
+                                    bg=COLORS["button_grey"],
+                                    fg=COLORS["text_blue"],
                                     command=self.open_settings_window)
         settings_button.pack()
 
         settings_label = tk.Label(settings_frame,
                                   text="Settings",
                                   font=('Courier', 8, 'bold'),
-                                  bg='#C5C1C2',
-                                  fg="#21298C")
+                                  bg=COLORS["gameboy_grey"],
+                                  fg=COLORS["text_blue"])
         settings_label.pack(pady=(5, 0))
 
         power_button = tk.Button(power_button_frame,
@@ -132,16 +150,16 @@ class GameBoyLauncher:
                                  height=1,
                                  font=('Courier', 8, 'bold'),
                                  relief=tk.RAISED,
-                                 bg="grey",
-                                 fg="#21298C",
+                                 bg=COLORS["button_grey"],
+                                 fg=COLORS["text_blue"],
                                  command=self.close_window)
         power_button.pack()
 
         power_label = tk.Label(power_button_frame,
                                text="Exit",
                                font=('Courier', 8, 'bold'),
-                               bg='#C5C1C2',
-                               fg="#21298C")
+                               bg=COLORS["gameboy_grey"],
+                               fg=COLORS["text_blue"])
         power_label.pack(pady=(5, 0))
 
         self.status_var = tk.StringVar()
@@ -235,6 +253,32 @@ class GameBoyLauncher:
             except Exception as e:
                 print(f"Error launching game: {e}")
                 self.status_var.set("LAUNCH FAILED")
+
+    def open_readme(self):
+        # Create a new top-level window for the README
+        readme_window = tk.Toplevel(self.root)
+        readme_window.title("README")
+        readme_window.geometry("1300x900")
+
+        # Create a frame for holding the HTMLLabel
+        frame = ttk.Frame(readme_window)
+        frame.pack(expand=True, fill=tk.BOTH)
+
+        # Read the README file and convert it to HTML using markdown library
+        try:
+            with open("README.md", "r") as readme_file:
+                readme_content = readme_file.read()
+
+                # Convert the markdown content to HTML
+                html_content = markdown.markdown(readme_content)
+
+                # Create the HTMLLabel to display the HTML content
+                html_label = HTMLLabel(frame, html=html_content)
+                html_label.pack(expand=True, fill=tk.BOTH)
+
+        except FileNotFoundError:
+            error_label = tk.Label(frame, text="README file not found.", fg="red")
+            error_label.pack(expand=True)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog
+from config import COLORS
 
 from keybinds_window import KeybindsConfig
 
@@ -10,13 +11,13 @@ class SettingsWindow:
         self.launcher = launcher
         self.top = tk.Toplevel(launcher.root)
         self.top.title("Settings")
-        self.top.configure(bg='#C5C1C2')
+        self.top.configure(bg=COLORS["gameboy_grey"])
 
         title = tk.Label(self.top,
                          text="Settings",
                          font=("Courier", 16, "bold"),
-                         bg='#C5C1C2',
-                         fg="#21298C")
+                         bg=COLORS["gameboy_grey"],
+                         fg=COLORS["text_blue"])
         title.pack(pady=20)
 
         options = [
@@ -43,8 +44,8 @@ class SettingsWindow:
             opt_btn = tk.Button(self.top,
                                 text=opt,
                                 font=("Courier", 10, "bold"),
-                                bg="grey",
-                                fg="black",
+                                bg=COLORS["button_grey"],
+                                fg=COLORS["black"],
                                 width=30,
                                 height=2,
                                 command=lambda opt_to_func=opt_to_func: getattr(self, opt_to_func)())

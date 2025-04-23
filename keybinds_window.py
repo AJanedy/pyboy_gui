@@ -2,7 +2,7 @@ import tkinter as tk
 from functools import partial
 
 import config
-from config import KEYBINDS, TKINTER_TO_SDL2
+from config import KEYBINDS, TKINTER_TO_SDL2, COLORS
 
 
 class KeybindsConfig:
@@ -20,7 +20,7 @@ class KeybindsConfig:
         offset_y = 60  # Offset from the parent window's top edge
 
         self.top.geometry(f"300x550+{parent_x+offset_x}+{parent_y+offset_y}")
-        self.top.configure(bg='#C5C1C2')
+        self.top.configure(bg=COLORS["gameboy_grey"])
 
         self.keybinds = keybinds
         self.create_widgets()
@@ -36,8 +36,8 @@ class KeybindsConfig:
             tk.Label(self.top,
                      text=label,
                      font=("Courier", 10, "bold"),
-                     bg='#C5C1C2',
-                     fg="#21298C",
+                     bg=COLORS["gameboy_grey"],
+                     fg=COLORS["text_blue"],
                      anchor="e",
                      width=12).grid(row=row, column=0, padx=10, pady=5, sticky="e")
 
@@ -45,8 +45,8 @@ class KeybindsConfig:
             btn = tk.Button(self.top,
                             text=key,
                             font=("Courier", 10, "bold"),
-                            bg="grey",
-                            fg="black",
+                            bg=COLORS["button_grey"],
+                            fg=COLORS["black"],
                             width=15,
                             height=2)
             # Using partial to pass both the action and the button
@@ -60,8 +60,8 @@ class KeybindsConfig:
         save_button = tk.Button(self.top,
                                 text="SAVE",
                                 font=("Courier", 14, "bold"),
-                                bg="#a61257",
-                                fg="black",
+                                bg=COLORS["button_magenta"],
+                                fg=COLORS["black"],
                                 width=5,
                                 height=2,
                                 relief=tk.RAISED,
@@ -93,7 +93,7 @@ class KeybindsConfig:
         def toggle(i):
             # Toggle the button color based on index i
             current_bg = btn.cget("bg")
-            btn.config(bg="#a61257" if current_bg != "#a61257" else "grey")
+            btn.config(bg=COLORS["button_magenta"] if current_bg != COLORS["button_magenta"] else COLORS["button_grey"])
 
             # If there are more flashes left, schedule the next one
             if i < count - 1:
@@ -103,7 +103,7 @@ class KeybindsConfig:
 
     def rebind_key(self, action, btn):
         # Highlight the button by changing its background color
-        btn.config(bg="#a61257")  # Highlight the button
+        btn.config(bg=COLORS["button_magenta"])  # Highlight the button
         btn.config(state="disabled")  # Disable the button to prevent further clicks
 
         self.top.unbind("<KeyPress>")
@@ -141,7 +141,7 @@ class KeybindsConfig:
         btn.config(text=new_binding)
 
         # Reset button state and color
-        btn.config(bg="grey", state="normal")  # Reset color and re-enable the button
+        btn.config(bg=COLORS["button_grey"], state="normal")  # Reset color and re-enable the button
         self.top.unbind("<KeyPress>")
         self.top.unbind("<Button>")
 

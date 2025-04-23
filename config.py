@@ -31,3 +31,15 @@ TKINTER_TO_SDL2 = {
     'apostrophe': 'SDLK_QUOTE', 'period': 'SDLK_PERIOD', 'slash': 'SDLK_SLASH',
     'colon': 'SDLK_COLON'
 }
+
+COLORS = {
+    "gameboy_grey": "#C5C1C2",
+    "screen_green": "#596708",
+    "highlight_green": "#005500",
+    "text_blue": "#21298C",
+    "button_grey": "#808080",
+    "black": "#000000",
+    "button_magenta": "#a61257",
+    "green": "#008800",
+    "white": "#FFFFFF"
+}
